@@ -2,13 +2,13 @@
 
 $is_invalid = false;
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+if ($_SERVER["REQUEST_METHOD"] === "GET") {
     
     $mysqli = require __DIR__ . "/database.php";
     
     $sql = sprintf("SELECT * FROM user
                     WHERE email = '%s'",
-                   $mysqli->real_escape_string($_POST["email"]));
+                   $mysqli->real_escape_string($_GET["email"]));
     
     $result = $mysqli->query($sql);
     
@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     if ($user) {
         
-        if (password_verify($_POST["password"], $user["password_hash"])) {
+        if (password_verify($_GET["password"], $user["password_hash"])) {
             
             session_start();
             
@@ -48,10 +48,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <em>Invalid login</em>
     <?php endif; ?>
     
-    <form method="post">
+    <form method="get">
         <label for="email">email</label>
         <input type="email" name="email" id="email"
-               value="<?= htmlspecialchars($_POST["email"] ?? "") ?>">
+               value="<?= htmlspecialchars($_GET["email"] ?? "") ?>">
         
         <label for="password">Password</label>
         <input type="password" name="password" id="password">
@@ -61,11 +61,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
 </body>
 </html>
-
-
-
-
-
-
-
-
