@@ -1,30 +1,30 @@
 <?php
 
-if (empty($_POST["name"])) {
+if (empty($_GET["name"])) {
     die("Name is required");
 }
 
-if ( ! filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+if ( ! filter_var($_GET["email"], FILTER_VALIDATE_EMAIL)) {
     die("Valid email is required");
 }
 
-if (strlen($_POST["password"]) < 8) {
+if (strlen($_GET["password"]) < 8) {
     die("Password must be at least 8 characters");
 }
 
-if ( ! preg_match("/[a-z]/i", $_POST["password"])) {
+if ( ! preg_match("/[a-z]/i", $_GET["password"])) {
     die("Password must contain at least one letter");
 }
 
-if ( ! preg_match("/[0-9]/", $_POST["password"])) {
+if ( ! preg_match("/[0-9]/", $_GET["password"])) {
     die("Password must contain at least one number");
 }
 
-if ($_POST["password"] !== $_POST["password_confirmation"]) {
+if ($_GET["password"] !== $_GET["password_confirmation"]) {
     die("Passwords must match");
 }
 
-$password_hash = password_hash($_POST["password"], PASSWORD_DEFAULT);
+$password_hash = password_hash($_GET["password"], PASSWORD_DEFAULT);
 
 $mysqli = require __DIR__ . "/database.php";
 
@@ -38,8 +38,8 @@ if ( ! $stmt->prepare($sql)) {
 }
 
 $stmt->bind_param("sss",
-                  $_POST["name"],
-                  $_POST["email"],
+                  $_GET["name"],
+                  $_GET["email"],
                   $password_hash);
                   
 if ($stmt->execute()) {
@@ -55,11 +55,3 @@ if ($stmt->execute()) {
         die($mysqli->error . " " . $mysqli->errno);
     }
 }
-
-
-
-
-
-
-
-
